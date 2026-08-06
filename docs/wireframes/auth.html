@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Financial Companion — Auth Wireframe</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { darkMode: 'class' }</script>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex items-center justify-center p-4">
+<div class="w-full max-w-4xl grid lg:grid-cols-2 gap-6">
+
+  <!-- Left: branding -->
+  <div class="hidden lg:flex flex-col justify-center p-8">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl font-bold">₹</div>
+      <div>
+        <p class="font-bold leading-tight text-lg">Financial</p>
+        <p class="font-bold text-indigo-600 dark:text-indigo-400 leading-tight text-lg">Companion</p>
+      </div>
+    </div>
+    <h1 class="text-3xl font-bold leading-snug">Your money,<br/>managed <span class="text-indigo-600 dark:text-indigo-400">simply.</span></h1>
+    <p class="text-slate-500 dark:text-slate-400 mt-4 text-sm leading-relaxed">
+      Track income, expenses, savings and more in one place — built for students, employees, freelancers, investors and small shop owners. In simple words, for everyone.
+    </p>
+    <ul class="mt-8 space-y-3 text-sm">
+      <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-xs">✓</span> Dashboard with charts and insights</li>
+      <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-xs">✓</span> Income &amp; expenses with notes</li>
+      <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-xs">✓</span> Savings goals and reports</li>
+      <li class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-xs">✓</span> Works in any currency you choose</li>
+    </ul>
+  </div>
+
+  <!-- Right: auth card -->
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm">
+    <!-- Tab switch (wireframe demo) -->
+    <div class="flex bg-slate-100 dark:bg-slate-700 rounded-xl p-1 mb-6 text-sm font-medium">
+      <button onclick="show('login')" id="tab-login" class="flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 shadow-sm">Login</button>
+      <button onclick="show('register')" id="tab-register" class="flex-1 py-2 rounded-lg text-slate-400">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1.5">Email</label>
+          <input class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1.5">Password</label>
+          <input type="password" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm" placeholder="••••••••" />
+        </div>
+        <div class="flex items-center justify-between text-sm">
+          <label class="flex items-center gap-2 text-slate-500"><input type="checkbox" class="rounded" /> Remember me</label>
+          <a class="text-indigo-600 dark:text-indigo-400 font-medium">Forgot password?</a>
+        </div>
+        <button class="w-full py-2.5 rounded-lg bg-indigo-600 text-white font-semibold text-sm">Login</button>
+        <p class="text-xs text-center text-slate-400">New here? <a onclick="show('register')" class="text-indigo-600 dark:text-indigo-400 font-medium cursor-pointer">Create an account</a></p>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register" class="hidden">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1.5">Full name</label>
+          <input class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm" placeholder="Ravi Kumar" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1.5">Email</label>
+          <input class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1.5">Password</label>
+          <input type="password" class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm" placeholder="At least 8 characters" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1.5">What fits you best?</label>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <button class="py-2 rounded-lg border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600">🎓 Student</button>
+            <button class="py-2 rounded-lg border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600">💼 Employee</button>
+            <button class="py-2 rounded-lg border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600">🎨 Freelancer</button>
+            <button class="py-2 rounded-lg border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600">📈 Investor</button>
+            <button class="py-2 rounded-lg col-span-2 border border-slate-200 dark:border-slate-600 hover:border-indigo-400 hover:text-indigo-600">🏪 Small Shop Owner</button>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">You can change this later in settings.</p>
+        </div>
+
+        <button class="w-full py-2.5 rounded-lg bg-indigo-600 text-white font-semibold text-sm">Create account</button>
+        <p class="text-xs text-center text-slate-400">Already have an account? <a onclick="show('login')" class="text-indigo-600 dark:text-indigo-400 font-medium cursor-pointer">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function show(screen) {
+    document.getElementById('login').classList.toggle('hidden', screen !== 'login');
+    document.getElementById('register').classList.toggle('hidden', screen !== 'register');
+    const l = document.getElementById('tab-login'), r = document.getElementById('tab-register');
+    l.classList.toggle('bg-white', screen === 'login');
+    l.classList.toggle('dark:bg-slate-800', screen === 'login');
+    l.classList.toggle('shadow-sm', screen === 'login');
+    r.classList.toggle('bg-white', screen === 'register');
+    r.classList.toggle('dark:bg-slate-800', screen === 'register');
+    r.classList.toggle('shadow-sm', screen === 'register');
+  }
+</script>
+</body>
+</html>

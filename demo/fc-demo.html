@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Financial Companion — Interactive Demo</title>
+<style>
+  :root { color-scheme: light; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f1f5f9; color: #1e293b; }
+  body.dark { background: #0f172a; color: #e2e8f0; }
+  body.dark .card { background: #1e293b; border-color: #334155; }
+  body.dark .sub { color: #94a3b8; }
+  body.dark .muted { color: #64748b; }
+  body.dark .field, body.dark .table th { border-color: #334155; }
+  body.dark .badge { background: #334155; color: #cbd5e1; }
+
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 224px; background: #312e81; color: #c7d2fe; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+  .logo { display: flex; align-items: center; gap: 10px; padding: 20px 18px; font-weight: 700; color: #fff; font-size: 17px; }
+  .logo .dot { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .nav { padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 11px; padding: 9px 12px; border-radius: 9px; font-size: 14px; cursor: pointer; transition: background .15s; color: #c7d2fe; }
+  .nav-item:hover { background: rgba(255,255,255,.08); }
+  .nav-item.active { background: #6366f1; color: #fff; font-weight: 600; }
+  .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .sidebar-foot { padding: 14px 18px; font-size: 11px; color: #818cf8; border-top: 1px solid rgba(255,255,255,.08); }
+
+  .main { flex: 1; min-width: 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 26px; background: #f1f5f9; }
+  body.dark .topbar { background: #0f172a; }
+  .topbar h1 { font-size: 19px; font-weight: 700; }
+  .topbar .sub { font-size: 13px; }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .theme-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 15px; }
+  body.dark .theme-btn { background: #1e293b; border-color: #334155; }
+
+  .content { padding: 22px 26px; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .stat { padding: 16px 18px; }
+  .stat .label { font-size: 13px; color: #64748b; margin-bottom: 6px; }
+  .stat .value { font-size: 23px; font-weight: 700; }
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+  @media (min-width: 900px) { .grid-2 { grid-template-columns: 2fr 1fr; } }
+  @media (min-width: 900px) { .grid-2b { grid-template-columns: 1fr 1fr; } }
+  .grid-2b { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+  .panel-title { font-size: 15px; font-weight: 700; padding: 15px 18px 0; }
+  .panel-sub { font-size: 12px; color: #94a3b8; padding: 2px 18px 12px; }
+  .chart-box { padding: 0 12px 14px; height: 260px; position: relative; }
+
+  .table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .table th { text-align: left; padding: 11px 18px; color: #94a3b8; font-weight: 600; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+  .table td { padding: 11px 18px; border-bottom: 1px solid #f1f5f9; }
+  .table tr:last-child td { border-bottom: none; }
+  .right { text-align: right; }
+  .pos { color: #059669; font-weight: 600; }
+  .neg { color: #e11d48; font-weight: 600; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; background: #eef2ff; color: #4338ca; font-weight: 600; }
+  .badge.green { background: #d1fae5; color: #047857; }
+  .badge.rose { background: #ffe4e6; color: #be123c; }
+  .badge.amber { background: #fef3c7; color: #b45309; }
+  .badge.slate { background: #f1f5f9; color: #475569; }
+  .muted { color: #94a3b8; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 9px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-primary { background: #6366f1; color: #fff; }
+  .btn-secondary { background: #fff; border: 1px solid #e2e8f0; color: #334155; }
+  body.dark .btn-secondary { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+  .btn-sm { padding: 6px 11px; font-size: 12px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 18px; }
+  .field { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 9px; font-size: 13px; background: #fff; }
+  body.dark .field { background: #0f172a; color: #e2e8f0; }
+  .flex-between { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .insight { display: flex; gap: 10px; align-items: flex-start; padding: 10px 18px; border-top: 1px solid #f1f5f9; font-size: 13px; }
+  body.dark .insight { border-color: #334155; }
+  .insight:first-of-type { border-top: none; }
+  .pill { padding: 1px 7px; border-radius: 6px; font-size: 11px; background: #6366f1; color: #fff; }
+  .empty { padding: 48px; text-align: center; color: #94a3b8; font-size: 14px; }
+  .note { font-style: italic; font-size: 12.5px; color: #64748b; }
+  .demo-note { margin: 0 26px 14px; padding: 10px 14px; border-radius: 10px; background: #eef2ff; color: #4338ca; font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+  body.dark .demo-note { background: #312e81; color: #c7d2fe; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
+  .dot.g { background:#10b981; } .dot.r { background:#f43f5e; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo"><span class="dot">₹</span> Financial Companion</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-foot">Interactive demo · sample data</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div><h1 id="pageTitle">Dashboard</h1><div class="sub" id="pageSub">Your money at a glance</div></div>
+      <div class="top-actions">
+        <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+        <div class="avatar">R</div>
+      </div>
+    </div>
+    <div class="demo-note">🎯 This is a <b>visual demo</b> with sample data — the real app runs locally with <code>docker compose up -d --build</code> (instructions below the demo).</div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<script>
+/* ---------------- Sample data ---------------- */
+const DATA = {
+  incomes: [
+    { title: 'Monthly Salary', date: '2026-07-31', category: 'Salary', method: 'Bank Transfer', amount: 75000, notes: 'Jul salary' },
+    { title: 'Freelance — Website', date: '2026-07-22', category: 'Business', method: 'UPI', amount: 18000, notes: 'Client logo project, paid in full' },
+    { title: 'Gift from family', date: '2026-07-14', category: 'Other', method: 'Cash', amount: 5000, notes: '' },
+    { title: 'Interest', date: '2026-07-05', category: 'Investment', method: 'Bank Transfer', amount: 1250, notes: 'Fixed deposit interest' },
+  ],
+  expenses: [
+    { title: 'House Rent', date: '2026-07-03', category: 'Bills', method: 'UPI', amount: 15000, recurring: 'Monthly', merchant: 'Owner' },
+    { title: 'Groceries', date: '2026-07-18', category: 'Food', method: 'Card', amount: 3400, recurring: null, merchant: 'Big Bazaar' },
+    { title: 'Electricity', date: '2026-07-10', category: 'Bills', method: 'UPI', amount: 2100, recurring: 'Monthly', merchant: 'Discom' },
+    { title: 'Dinner out', date: '2026-07-25', category: 'Entertainment', method: 'Card', amount: 1800, recurring: null, merchant: 'Toscano' },
+    { title: 'Groceries', date: '2026-07-05', category: 'Food', method: 'UPI', amount: 2900, recurring: null, merchant: 'DMart' },
+    { title: 'Internet', date: '2026-07-08', category: 'Bills', method: 'Card', amount: 1200, recurring: 'Monthly', merchant: 'Airtel' },
+  ],
+  monthly: [
+    { m: 'Feb', income: 64000, expenses: 31000 },
+    { m: 'Mar', income: 68000, expenses: 35500 },
+    { m: 'Apr', income: 82000, expenses: 41000 },
+    { m: 'May', income: 70000, expenses: 33000 },
+    { m: 'Jun', income: 93000, expenses: 39000 },
+    { m: 'Jul', income: 99000, expenses: 36500 },
+  ],
+  breakdown: [
+    { label: 'Bills', value: 18300, color: '#eab308' },
+    { label: 'Food', value: 6300, color: '#f97316' },
+    { label: 'Entertainment', value: 1800, color: '#a855f7' },
+    { label: 'Travel', value: 5200, color: '#3b82f6' },
+    { label: 'Shopping', value: 4900, color: '#ec4899' },
+  ],
+  insights: [
+    'You saved 62% of your income this month — great work! 🎉',
+    'Bills (₹18,300) is your biggest expense category — 50% of spending.',
+    '3 recurring expenses total ₹18,300/month (rent, electricity, internet).',
+    'Income is up 6% vs last month.',
+  ],
+  goals: [
+    { name: 'Emergency Fund', saved: 45000, target: 100000 },
+    { name: 'Goa Trip', saved: 12000, target: 60000 },
+  ],
+}
+
+/* ---------------- Helpers ---------------- */
+const fmt = (n) => '₹' + Number(n).toLocaleString('en-IN')
+const fmtDate = (s) => new Date(s + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+const sum = (arr) => arr.reduce((a, b) => a + b, 0)
+
+let currentPage = 'dashboard'
+let dark = false
+
+/* ---------------- Icons ---------------- */
+const ICONS = {
+  dashboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>',
+  income: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 8 5-5 5 5"/><path d="M4 21h16"/></svg>',
+  expenses: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V8"/><path d="m7 16 5 5 5-5"/><path d="M4 3h16"/></svg>',
+  notes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+  savings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  reports: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-8"/><path d="M22 20H2"/></svg>',
+  settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+}
+
+const PAGES = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'income', label: 'Income' },
+  { id: 'expenses', label: 'Expenses' },
+  { id: 'notes', label: 'Notes' },
+  { id: 'savings', label: 'Savings Goals' },
+  { id: 'reports', label: 'Reports' },
+  { id: 'settings', label: 'Settings' },
+]
+
+const SUBTITLES = {
+  dashboard: 'Your money at a glance',
+  income: 'Track the money you receive',
+  expenses: 'Track the money you spend',
+  notes: 'Notes attached to your records',
+  savings: 'Save toward your goals',
+  reports: 'Profit/loss for any period',
+  settings: 'Currency, theme and profile',
+}
+
+/* ---------------- Render: nav ---------------- */
+function renderNav() {
+  document.getElementById('nav').innerHTML = PAGES.map((p) =>
+    `<div class="nav-item ${p.id === currentPage ? 'active' : ''}" onclick="go('${p.id}')">${ICONS[p.id]} ${p.label}</div>`
+  ).join('')
+}
+
+/* ---------------- Pages ---------------- */
+function pageDashboard() {
+  const totIncome = sum(DATA.incomes.map(i => i.amount))
+  const totExpense = sum(DATA.expenses.map(e => e.amount))
+  const balance = totIncome - totExpense
+  const lastM = DATA.monthly[DATA.monthly.length - 1]
+  const pct = Math.round((lastM.expenses / lastM.income) * 100)
+  return `
+    <div class="grid-4">
+      <div class="card stat"><div class="label">Total Income</div><div class="value pos">${fmt(totIncome)}</div></div>
+      <div class="card stat"><div class="label">Total Expenses</div><div class="value neg">${fmt(totExpense)}</div></div>
+      <div class="card stat"><div class="label">Balance</div><div class="value">${fmt(balance)}</div></div>
+      <div class="card stat"><div class="label">Savings this month</div><div class="value">${fmt(lastM.income - lastM.expenses)}</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="panel-title">Income vs Expenses</div><div class="panel-sub">Last 6 months</div><div class="chart-box"><canvas id="barChart"></canvas></div></div>
+      <div class="card"><div class="panel-title">Expense Breakdown</div><div class="panel-sub">${pct}% of income spent this month</div><div class="chart-box"><canvas id="doughnutChart"></canvas></div></div>
+    </div>
+    <div class="grid-2b">
+      <div class="card"><div class="panel-title">Recent Transactions</div><div class="panel-sub">Latest activity</div>
+        <table class="table"><tbody>
+          ${[...DATA.incomes.map(i => ({ ...i, kind: 'income' })), ...DATA.expenses.map(e => ({ ...e, kind: 'expense' }))]
+            .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5)
+            .map(t => `<tr><td>${fmtDate(t.date)}</td><td><b>${t.title}</b><div class="note">${t.category}</div></td><td class="right">${t.kind === 'income' ? `<span class="pos">+${fmt(t.amount)}</span>` : `<span class="neg">−${fmt(t.amount)}</span>`}</td></tr>`).join('')}
+        </tbody></table>
+      </div>
+      <div class="card"><div class="panel-title">Savings Goals</div><div class="panel-sub">Your progress</div>
+        ${DATA.goals.map(g => { const p = Math.round(g.saved / g.target * 100); return `
+          <div style="padding:10px 18px;"><div class="flex-between"><b>${g.name}</b><span class="muted">${fmt(g.saved)} / ${fmt(g.target)}</span></div>
+          <div style="height:8px;background:#e2e8f0;border-radius:999px;margin-top:6px;"><div style="height:8px;width:${p}%;background:#6366f1;border-radius:999px;"></div></div></div>` }).join('')}
+        <div class="panel-title" style="padding-top:16px;">Insights</div>
+        ${DATA.insights.map(i => `<div class="insight">💡 ${i}</div>`).join('')}
+      </div>
+    </div>`
+}
+
+function pageIncome() {
+  return `
+    <div class="card"><div class="filters flex-between">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input class="field" placeholder="🔍  Search income…" style="width:220px;">
+        <select class="field"><option>All categories</option><option>Salary</option><option>Business</option><option>Investment</option><option>Other</option></select>
+        <input class="field" type="month" value="2026-07">
+      </div>
+      <button class="btn btn-primary">+ Add Income</button>
+    </div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Payment</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        ${DATA.incomes.map(i => `<tr><td class="muted">${fmtDate(i.date)}</td><td><b>${i.title}</b>${i.notes ? `<div class="note">${i.notes}</div>` : ''}</td><td><span class="badge green">${i.category}</span></td><td class="muted">${i.method}</td><td class="right pos">+${fmt(i.amount)}</td></tr>`).join('')}
+      </tbody>
+    </table></div>`
+}
+
+function pageExpenses() {
+  return `
+    <div class="card"><div class="filters flex-between">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input class="field" placeholder="🔍  Search expenses…" style="width:220px;">
+        <select class="field"><option>All categories</option><option>Food</option><option>Bills</option><option>Entertainment</option><option>Travel</option></select>
+        <input class="field" type="month" value="2026-07">
+        <button class="btn btn-secondary btn-sm" style="align-self:center;">🔁 Recurring only</button>
+      </div>
+      <button class="btn btn-primary">+ Add Expense</button>
+    </div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Title</th><th>Category</th><th>Payment</th><th>Recurring</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        ${DATA.expenses.map(e => `<tr><td class="muted">${fmtDate(e.date)}</td><td><b>${e.title}</b><div class="note">${e.merchant}</div></td><td><span class="badge amber">${e.category}</span></td><td class="muted">${e.method}</td><td>${e.recurring ? `<span class="badge">🔁 ${e.recurring}</span>` : '<span class="muted">—</span>'}</td><td class="right neg">−${fmt(e.amount)}</td></tr>`).join('')}
+      </tbody>
+    </table></div>`
+}
+
+function pageNotes() {
+  const notes = [
+    ...DATA.incomes.filter(i => i.notes).map(i => ({ ...i, kind: 'income' })),
+    ...DATA.expenses.filter(e => e.notes).map(e => ({ ...e, kind: 'expense' })),
+  ]
+  return notes.length ? `
+    <div class="grid-2b">
+      ${notes.map(n => `
+        <div class="card" style="padding:16px 18px;">
+          <div class="flex-between"><span class="badge ${n.kind === 'income' ? 'green' : 'rose'}">${n.kind === 'income' ? 'Income' : 'Expense'}</span><span class="muted" style="font-size:12px;">${fmtDate(n.date)}</span></div>
+          <div style="margin-top:8px;"><b>${n.title}</b> <span class="muted">· ${n.kind === 'income' ? '+' : '−'}${fmt(n.amount)}</span></div>
+          <div class="note" style="margin-top:8px;background:#f8fafc;padding:10px 12px;border-left:3px solid #6366f1;border-radius:0 8px 8px 0;">"${n.notes}"</div>
+        </div>`).join('')}
+    </div>` : `<div class="card empty">No notes yet.</div>`
+}
+
+function pageSavings() {
+  return `<div class="grid-4">
+      ${DATA.goals.map(g => { const p = Math.round(g.saved / g.target * 100); return `
+        <div class="card stat"><div class="label">${g.name}</div><div class="value" style="font-size:19px;">${fmt(g.saved)} <span class="muted" style="font-size:13px;">/ ${fmt(g.target)}</span></div>
+        <div style="height:8px;background:#e2e8f0;border-radius:999px;margin-top:10px;"><div style="height:8px;width:${p}%;background:#6366f1;border-radius:999px;"></div></div>
+        <div class="muted" style="font-size:12px;margin-top:6px;">${p}% funded</div></div>` }).join('')}
+    </div>
+    <div class="card"><div class="filters flex-between"><span style="font-weight:600;">Recent contributions</span><button class="btn btn-primary">+ Add Money</button></div>
+      <table class="table"><thead><tr><th>Goal</th><th>Date</th><th class="right">Amount</th></tr></thead><tbody>
+      <tr><td>Emergency Fund</td><td class="muted">2026-07-05</td><td class="right pos">+${fmt(10000)}</td></tr>
+      <tr><td>Goa Trip</td><td class="muted">2026-07-18</td><td class="right pos">+${fmt(5000)}</td></tr>
+      </tbody></table></div>`
+}
+
+function pageReports() {
+  const totIncome = sum(DATA.incomes.map(i => i.amount))
+  const totExpense = sum(DATA.expenses.map(e => e.amount))
+  const balance = totIncome - totExpense
+  const rows = [...new Set(DATA.expenses.map(e => e.category))].map(cat => {
+    const t = sum(DATA.expenses.filter(e => e.category === cat).map(e => e.amount))
+    return { cat, t, p: Math.round(t / totExpense * 100) }
+  }).sort((a, b) => b.t - a.t)
+  return `
+    <div class="card"><div class="filters flex-between">
+      <select class="field"><option>This month</option><option>Last month</option><option>This year</option><option>Custom range…</option></select>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm">⬇ PDF</button><button class="btn btn-secondary btn-sm">⬇ CSV</button>
+      </div>
+    </div></div>
+    <div class="grid-4" style="margin-top:14px;">
+      <div class="card stat"><div class="label">Total Income</div><div class="value pos">${fmt(totIncome)}</div></div>
+      <div class="card stat"><div class="label">Total Expenses</div><div class="value neg">${fmt(totExpense)}</div></div>
+      <div class="card stat"><div class="label">Profit / Loss</div><div class="value" style="color:${balance >= 0 ? '#059669' : '#e11d48'}">${fmt(balance)}</div></div>
+      <div class="card stat"><div class="label">Savings</div><div class="value">${fmt(DATA.goals[0].saved)}</div></div>
+    </div>
+    <div class="grid-2b" style="margin-top:14px;">
+      <div class="card"><div class="panel-title">Expense Category Summary</div>
+        <table class="table"><thead><tr><th>Category</th><th class="right">Amount</th><th class="right">Share</th></tr></thead><tbody>
+        ${rows.map(r => `<tr><td>${r.cat}</td><td class="right">${fmt(r.t)}</td><td class="right muted">${r.p}%</td></tr>`).join('')}
+        </tbody></table>
+      </div>
+      <div class="card"><div class="panel-title">Income Breakdown</div><div class="panel-sub">By category</div>
+        <div style="padding:14px 18px;">
+        ${[...new Set(DATA.incomes.map(i => i.category))].map(cat => { const t = sum(DATA.incomes.filter(i => i.category === cat).map(i => i.amount)); const p = Math.round(t / totIncome * 100); return `
+          <div style="margin-bottom:12px;"><div class="flex-between" style="font-size:13px;"><span><b>${cat}</b></span><span class="muted">${p}%</span></div>
+          <div style="height:7px;background:#e2e8f0;border-radius:999px;margin-top:5px;"><div style="height:7px;width:${p}%;background:#10b981;border-radius:999px;"></div></div></div>` }).join('')}
+        </div>
+      </div>
+    </div>`
+}
+
+function pageSettings() {
+  return `<div class="grid-2b">
+    <div class="card"><div class="panel-title">Profile</div><div class="panel-sub">Your account</div>
+      <div style="padding:14px 18px;"><div class="flex-between" style="padding:8px 0;border-bottom:1px solid #f1f5f9;"><span class="muted">Name</span><b>Rohan Kumar</b></div>
+      <div class="flex-between" style="padding:8px 0;border-bottom:1px solid #f1f5f9;"><span class="muted">Email</span><b>rohan@example.com</b></div>
+      <div class="flex-between" style="padding:8px 0;"><span class="muted">Role</span><span class="badge">Employee</span></div></div></div>
+    <div class="card"><div class="panel-title">Preferences</div><div class="panel-sub">Currency & appearance</div>
+      <div style="padding:14px 18px;">
+        <div class="muted" style="margin-bottom:6px;font-size:13px;">Currency</div>
+        <select class="field" style="width:100%;"><option>🇮🇳 INR — Indian Rupee</option><option>🇺🇸 USD — US Dollar</option><option>🇪🇺 EUR — Euro</option><option>🇦🇪 AED — UAE Dirham</option></select>
+        <div class="muted" style="margin:14px 0 6px;font-size:13px;">Theme</div>
+        <button class="btn btn-secondary" onclick="toggleTheme()" style="width:100%;">🌙 Toggle dark mode</button>
+      </div></div>
+  </div>`
+}
+
+/* ---------------- Chart rendering ---------------- */
+function renderCharts() {
+  if (currentPage !== 'dashboard') return
+  const isDark = document.body.classList.contains('dark')
+  const grid = isDark ? '#334155' : '#e2e8f0'
+  const text = isDark ? '#94a3b8' : '#64748b'
+  const labels = DATA.monthly.map(d => d.m)
+  const bar = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: { labels, datasets: [
+      { label: 'Income', data: DATA.monthly.map(d => d.income), backgroundColor: '#6366f1', borderRadius: 6 },
+      { label: 'Expenses', data: DATA.monthly.map(d => d.expenses), backgroundColor: '#f43f5e', borderRadius: 6 },
+    ]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: text, usePointStyle: true } } },
+      scales: { x: { grid: { color: grid }, ticks: { color: text } }, y: { grid: { color: grid }, ticks: { color: text } } } },
+  })
+  const donut = new Chart(document.getElementById('doughnutChart'), {
+    type: 'doughnut',
+    data: { labels: DATA.breakdown.map(d => d.label), datasets: [{ data: DATA.breakdown.map(d => d.value), backgroundColor: DATA.breakdown.map(d => d.color), borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: text, padding: 12, usePointStyle: true } } } },
+  })
+  window._charts = [bar, donut]
+}
+
+/* ---------------- Router ---------------- */
+function go(page) {
+  currentPage = page
+  renderNav()
+  document.getElementById('pageTitle').textContent = PAGES.find(p => p.id === page).label
+  document.getElementById('pageSub').textContent = SUBTITLES[page]
+  const renderers = { dashboard: pageDashboard, income: pageIncome, expenses: pageExpenses, notes: pageNotes, savings: pageSavings, reports: pageReports, settings: pageSettings }
+  document.getElementById('content').innerHTML = renderers[page]()
+  if (window._charts) { window._charts.forEach(c => c.destroy()) }
+  if (page === 'dashboard') renderCharts()
+}
+
+function toggleTheme() {
+  dark = !dark
+  document.body.classList.toggle('dark', dark)
+  document.querySelector('.theme-btn').textContent = dark ? '☀️' : '🌙'
+  if (currentPage === 'dashboard') { document.getElementById('content').innerHTML = pageDashboard(); renderCharts() }
+}
+
+/* ---------------- Boot ---------------- */
+renderNav()
+go('dashboard')
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# ============================================================
+# Financial Companion — Python dependencies
+# Backend: FastAPI + SQLAlchemy + PostgreSQL
+# ============================================================
+
+# --- Web framework ---
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+gunicorn>=22.0
+
+# --- Database ---
+SQLAlchemy>=2.0.30,<2.1
+psycopg2-binary>=2.9.9
+alembic>=1.13,<2.0
+
+# --- Validation & settings ---
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+email-validator>=2.2
+
+# --- Auth (used from Phase 4; declared now so one install works) ---
+PyJWT>=2.8
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+
+# --- Utilities ---
+python-multipart>=0.0.9
+
+# --- Report generation (Financial Data Export) ---
+reportlab>=4.2

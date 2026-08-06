@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Financial Companion — UI Wireframe (Dashboard)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class' }
+</script>
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .nav-btn.active { background: #4f46e5; color: #fff; }
+  .dark .nav-btn.active { background: #6366f1; color: #fff; }
+  .bar { border-radius: 6px 6px 0 0; }
+</style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+<div class="flex min-h-screen">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-5 hidden md:block shrink-0">
+    <div class="flex items-center gap-2 mb-8">
+      <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg font-bold">₹</div>
+      <div>
+        <p class="font-bold leading-tight">Financial</p>
+        <p class="font-bold text-indigo-600 dark:text-indigo-400 leading-tight">Companion</p>
+      </div>
+    </div>
+
+    <nav class="space-y-1 text-sm font-medium">
+      <button onclick="go('dashboard')" class="nav-btn active w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">📊 Dashboard</button>
+      <button onclick="go('income')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">💸 Income</button>
+      <button onclick="go('expenses')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">🧾 Expenses</button>
+      <button onclick="go('savings')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">🎯 Savings Goals</button>
+      <button onclick="go('reports')" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">📈 Reports</button>
+
+      <p class="pt-6 pb-1 px-3 text-xs uppercase tracking-wide text-slate-400">Role tools</p>
+      <button class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">🏪 Shop (Owner)</button>
+      <button class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">💼 Investments</button>
+
+      <p class="pt-6 pb-1 px-3 text-xs uppercase tracking-wide text-slate-400">Account</p>
+      <button class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">⚙️ Settings</button>
+    </nav>
+
+    <div class="mt-8 p-3 rounded-xl bg-indigo-50 dark:bg-slate-700/50 text-xs">
+      <p class="font-semibold mb-1">💡 Insights</p>
+      <p class="text-slate-500 dark:text-slate-300">Your Food spending went up 12% this month.</p>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="flex-1 p-4 md:p-8">
+    <!-- Topbar -->
+    <header class="flex items-center justify-between mb-6">
+      <div>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Good morning 👋</p>
+        <h1 class="text-xl md:text-2xl font-bold" id="page-title">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <input class="hidden sm:block w-56 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm" placeholder="Search transactions..." />
+        <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700" title="Toggle theme">🌙</button>
+        <div class="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">RK</div>
+      </div>
+    </header>
+
+    <!-- ============ PAGE: DASHBOARD ============ -->
+    <section id="dashboard" class="page active space-y-6">
+      <!-- Stat cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="text-sm text-slate-500 dark:text-slate-400">Total Income</p>
+          <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">₹48,500</p>
+          <p class="text-xs text-emerald-500 mt-1">▲ 8% vs last month</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="text-sm text-slate-500 dark:text-slate-400">Total Expenses</p>
+          <p class="text-2xl font-bold text-rose-600 dark:text-rose-400">₹31,240</p>
+          <p class="text-xs text-rose-500 mt-1">▲ 3% vs last month</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="text-sm text-slate-500 dark:text-slate-400">Current Balance</p>
+          <p class="text-2xl font-bold">₹17,260</p>
+          <p class="text-xs text-slate-400 mt-1">across 2 currencies</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="text-sm text-slate-500 dark:text-slate-400">Savings Goal</p>
+          <p class="text-2xl font-bold">62%</p>
+          <div class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full mt-2"><div class="h-2 w-[62%] bg-indigo-500 rounded-full"></div></div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="font-semibold mb-4">Income vs Expenses (last 6 months)</p>
+          <div class="flex items-end justify-between gap-3 h-48">
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[40%]"></div><div class="w-6 bar bg-rose-400 h-[35%]"></div><span class="text-xs text-slate-400">Mar</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[55%]"></div><div class="w-6 bar bg-rose-400 h-[45%]"></div><span class="text-xs text-slate-400">Apr</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[48%]"></div><div class="w-6 bar bg-rose-400 h-[52%]"></div><span class="text-xs text-slate-400">May</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[70%]"></div><div class="w-6 bar bg-rose-400 h-[58%]"></div><span class="text-xs text-slate-400">Jun</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[62%]"></div><div class="w-6 bar bg-rose-400 h-[66%]"></div><span class="text-xs text-slate-400">Jul</span></div>
+            <div class="flex-1 flex flex-col items-center gap-1"><div class="w-6 bar bg-emerald-400 h-[80%]"></div><div class="w-6 bar bg-rose-400 h-[60%]"></div><span class="text-xs text-slate-400">Aug</span></div>
+          </div>
+          <div class="flex gap-4 mt-3 text-xs text-slate-500"><span>🟩 Income</span><span>🟥 Expenses</span></div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <p class="font-semibold mb-4">Expense Breakdown</p>
+          <!-- Donut mock -->
+          <div class="flex justify-center">
+            <div class="w-36 h-36 rounded-full" style="background: conic-gradient(#f97316 0 30%, #3b82f6 30% 50%, #a855f7 50% 62%, #14b8a6 62% 75%, #ef4444 75% 88%, #64748b 88% 100%);"></div>
+          </div>
+          <ul class="mt-4 space-y-1.5 text-sm">
+            <li class="flex justify-between"><span>🍽 Food</span><span class="font-medium">30%</span></li>
+            <li class="flex justify-between"><span>🚗 Travel</span><span class="font-medium">20%</span></li>
+            <li class="flex justify-between"><span>🎬 Entertainment</span><span class="font-medium">12%</span></li>
+            <li class="flex justify-between"><span>💊 Medical</span><span class="font-medium">13%</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Recent + Calendar + Insights -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <div class="flex items-center justify-between mb-4">
+            <p class="font-semibold">Recent Transactions</p>
+            <button class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">View all →</button>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-left text-slate-400 border-b border-slate-100 dark:border-slate-700"><th class="pb-2">Title</th><th class="pb-2">Category</th><th class="pb-2 text-right">Amount</th><th class="pb-2 text-right">Date</th></tr></thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+              <tr><td class="py-3">Monthly Salary</td><td>💼 Salary</td><td class="text-right text-emerald-600 font-medium">+₹25,000</td><td class="text-right text-slate-400">Aug 1</td></tr>
+              <tr><td class="py-3">Lunch with team</td><td>🍽 Food</td><td class="text-right text-rose-600 font-medium">-₹420</td><td class="text-right text-slate-400">Aug 2</td></tr>
+              <tr><td class="py-3">Freelance logo</td><td>🎨 Business</td><td class="text-right text-emerald-600 font-medium">+₹8,500</td><td class="text-right text-slate-400">Aug 2</td></tr>
+              <tr><td class="py-3">Petrol</td><td>🚗 Travel</td><td class="text-right text-rose-600 font-medium">-₹1,000</td><td class="text-right text-slate-400">Aug 3</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+            <p class="font-semibold mb-3">August 2026</p>
+            <div class="grid grid-cols-7 gap-1 text-center text-xs">
+              <span class="text-slate-400">Mo</span><span class="text-slate-400">Tu</span><span class="text-slate-400">We</span><span class="text-slate-400">Th</span><span class="text-slate-400">Fr</span><span class="text-slate-400">Sa</span><span class="text-slate-400">Su</span>
+              <span></span><span></span><span></span><span></span><span></span><span></span><span class="py-1">1</span>
+              <span class="py-1">2</span><span class="py-1 rounded-full bg-indigo-600 text-white">3</span><span class="py-1">4</span><span class="py-1">5</span><span class="py-1">6</span><span class="py-1">7</span><span class="py-1">8</span>
+              <span class="py-1">9</span><span class="py-1">10</span><span class="py-1">11</span><span class="py-1">12</span><span class="py-1">13</span><span class="py-1">14</span><span class="py-1">15</span>
+              <span class="py-1">16</span><span class="py-1">17</span><span class="py-1">18</span><span class="py-1">19</span><span class="py-1">20</span><span class="py-1">21</span><span class="py-1">22</span>
+              <span class="py-1">23</span><span class="py-1">24</span><span class="py-1">25</span><span class="py-1">26</span><span class="py-1">27</span><span class="py-1">28</span><span class="py-1">29</span>
+              <span class="py-1">30</span><span class="py-1">31</span>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+            <p class="font-semibold mb-2">Quick Actions</p>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <button class="py-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 font-medium">+ Add Income</button>
+              <button class="py-2 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 font-medium">+ Add Expense</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PAGE: INCOME ============ -->
+    <section id="income" class="page space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex gap-2 text-sm">
+          <input class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2" placeholder="Search income..." />
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>All categories</option></select>
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>All dates</option></select>
+        </div>
+        <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium">+ Add Income</button>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left text-slate-400 border-b border-slate-100 dark:border-slate-700"><th class="pb-2">Title</th><th class="pb-2">Category</th><th class="pb-2">Method</th><th class="pb-2 text-right">Amount</th><th class="pb-2 text-right">Date</th><th class="pb-2 text-right">Actions</th></tr></thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tr><td class="py-3">Monthly Salary</td><td>💼 Salary</td><td>Bank</td><td class="text-right text-emerald-600 font-medium">₹25,000</td><td class="text-right text-slate-400">Aug 1</td><td class="text-right">✏️ 🗑</td></tr>
+            <tr><td class="py-3">Freelance logo</td><td>🎨 Business</td><td>UPI</td><td class="text-right text-emerald-600 font-medium">₹8,500</td><td class="text-right text-slate-400">Aug 2</td><td class="text-right">✏️ 🗑</td></tr>
+            <tr><td class="py-3">Old phone sold</td><td>📦 Other</td><td>Cash</td><td class="text-right text-emerald-600 font-medium">₹15,000</td><td class="text-right text-slate-400">Jul 28</td><td class="text-right">✏️ 🗑</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ PAGE: EXPENSES ============ -->
+    <section id="expenses" class="page space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex gap-2 text-sm">
+          <input class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2" placeholder="Search expenses..." />
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>All categories</option></select>
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>All payment methods</option></select>
+        </div>
+        <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium">+ Add Expense</button>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left text-slate-400 border-b border-slate-100 dark:border-slate-700"><th class="pb-2">Title</th><th class="pb-2">Category</th><th class="pb-2">Merchant</th><th class="pb-2">Recurring</th><th class="pb-2 text-right">Amount</th><th class="pb-2 text-right">Date</th><th class="pb-2 text-right">Actions</th></tr></thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tr><td class="py-3">Lunch with team</td><td>🍽 Food</td><td>Meghana Foods</td><td>—</td><td class="text-right text-rose-600 font-medium">₹420</td><td class="text-right text-slate-400">Aug 2</td><td class="text-right">✏️ 🗑</td></tr>
+            <tr><td class="py-3">Petrol</td><td>🚗 Travel</td><td>Indian Oil</td><td>—</td><td class="text-right text-rose-600 font-medium">₹1,000</td><td class="text-right text-slate-400">Aug 3</td><td class="text-right">✏️ 🗑</td></tr>
+            <tr><td class="py-3">House rent</td><td>🏠 Bills</td><td>Landlord</td><td class="text-indigo-600">🔁 Monthly</td><td class="text-right text-rose-600 font-medium">₹12,000</td><td class="text-right text-slate-400">Aug 1</td><td class="text-right">✏️ 🗑</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ PAGE: SAVINGS ============ -->
+    <section id="savings" class="page space-y-4">
+      <div class="flex items-center justify-between">
+        <p class="text-slate-500 dark:text-slate-400 text-sm">Track money you set aside for a goal</p>
+        <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium">+ New Goal</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <div class="flex justify-between"><p class="font-semibold">Emergency Fund</p><span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">Active</span></div>
+          <p class="text-2xl font-bold mt-3">₹62,000 <span class="text-sm font-normal text-slate-400">of ₹1,00,000</span></p>
+          <div class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full mt-3"><div class="h-2 w-[62%] bg-indigo-500 rounded-full"></div></div>
+          <p class="text-xs text-slate-400 mt-2">Target: Dec 2026</p>
+          <button class="mt-4 text-sm text-indigo-600 dark:text-indigo-400 font-medium">+ Add money</button>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <div class="flex justify-between"><p class="font-semibold">Goa Trip</p><span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">In progress</span></div>
+          <p class="text-2xl font-bold mt-3">₹18,000 <span class="text-sm font-normal text-slate-400">of ₹40,000</span></p>
+          <div class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full mt-3"><div class="h-2 w-[45%] bg-indigo-500 rounded-full"></div></div>
+          <p class="text-xs text-slate-400 mt-2">Target: Oct 2026</p>
+          <button class="mt-4 text-sm text-indigo-600 dark:text-indigo-400 font-medium">+ Add money</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PAGE: REPORTS ============ -->
+    <section id="reports" class="page space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex gap-2 text-sm">
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>Monthly</option><option>Weekly</option><option>Yearly</option></select>
+          <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2"><option>All categories</option></select>
+        </div>
+        <div class="flex gap-2 text-sm">
+          <button class="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">⬇ Export CSV</button>
+          <button class="px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-medium">⬇ Export PDF</button>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+        <p class="font-semibold mb-3">Profit / Loss — August 2026</p>
+        <div class="grid grid-cols-3 gap-4 text-sm">
+          <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/30"><p class="text-slate-500 dark:text-slate-400">Total Income</p><p class="text-xl font-bold text-emerald-600 dark:text-emerald-400">₹48,500</p></div>
+          <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-900/30"><p class="text-slate-500 dark:text-slate-400">Total Expenses</p><p class="text-xl font-bold text-rose-600 dark:text-rose-400">₹31,240</p></div>
+          <div class="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/30"><p class="text-slate-500 dark:text-slate-400">Net Savings</p><p class="text-xl font-bold">₹17,260</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer note -->
+    <p class="text-center text-xs text-slate-400 mt-8">Financial Companion · Phase 1 UI Wireframe · click the sidebar to preview pages</p>
+  </main>
+</div>
+
+<script>
+  function go(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    const titles = { dashboard:'Dashboard', income:'Income', expenses:'Expenses', savings:'Savings Goals', reports:'Reports' };
+    document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
+  }
+  function toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+  }
+</script>
+</body>
+</html>
