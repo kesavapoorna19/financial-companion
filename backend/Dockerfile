@@ -21,8 +21,4 @@ COPY . .
 
 EXPOSE 8000
 
-# Run: 4 workers in production, auto-reload in dev via compose override
-CMD ["gunicorn", "app.main:app", \
-     "-k", "uvicorn.workers.UvicornWorker", \
-     "-w", "4", \
-     "-b", "0.0.0.0:8000"]
+CMD ["sh", "-c", "exec gunicorn app.main:app -k uvicorn.workers.UvicornWorker -w 4 -b 0.0.0.0:${PORT:-8000}"]
